@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lunch Money - New Transaction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="p-5 bg-white dark:bg-gray-900 antialiased">
+    <div>
+      <form id="transaction_form" action="">
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <label
+              for="amount"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Amount</label
+            >
+            <input
+              type="text"
+              id="amount"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Amount"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="payee"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Merchant</label
+            >
+            <input
+              type="text"
+              id="payee"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Eg. Walmart"
+              required
+            />
+          </div>
+          <div class="flex gap-5">
+            <div>
+              <label
+                for="datepicker"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Select Date:</label
+              >
+              <div class="relative max-w-sm">
+                <div
+                  class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  id="datepicker"
+                  datepicker
+                  datepicker-buttons
+                  datepicker-autoselect-today
+                  type="date"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Select date"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                for="timeField"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Select time:</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="time"
+                  id="timeField"
+                  class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value="00:00"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <label
+              for="currency"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Currency</label
+            >
+            <select
+              id="currency"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="mxn">Mexican Peso</option>
+              <option value="usd">U.S. Dollar</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label
+              for="message"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Your message</label
+            >
+            <textarea
+              id="notes"
+              rows="4"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Any additional notes?"
+            ></textarea>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+
+    <form id="token_form" action="">
+      <div>
+        <label
+          for="token"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Token</label
+        >
+        <input
+          type="text"
+          id="token"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Token"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        Submit
+      </button>
+    </form>
+    <script>
+      // Initial Setup
+      const lm_form = document.getElementById("transaction_form");
+      const token_form = document.getElementById("token_form");
+
+      lm_form.querySelector("#datepicker").valueAsDate = new Date();
+      var now = new Date();
+      var offset = now.getTimezoneOffset() * 60000;
+      var adjustedDate = new Date(now.getTime() - offset);
+      var formattedDate = adjustedDate.toISOString().substring(11, 16); // For minute precision
+      var datetimeField = document.getElementById("timeField");
+      datetimeField.value = formattedDate;
+
+      const getData = async (url = "") => {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+
+        const filtered_cats = data.categories
+          .map((cat) => {
+            const cat_obj = {};
+            if (!cat.is_income) {
+              return {
+                id: cat.id,
+                name: cat.name,
+                children: {
+                  id: cat.children?.id,
+                  name: cat.children?.name,
+                },
+              };
+            }
+          })
+          .filter(Boolean);
+        console.log("CATS => ", filtered_cats);
+        return filtered_cats;
+      };
+
+      getData("https://dev.lunchmoney.app/v1/categories");
+      const postData = async (url = "", data = {}) => {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      };
+      lm_form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const transaction_group = {
+          transactions: [
+            {
+              date: `${lm_form.querySelector("#datepicker").value}T${
+                lm_form.querySelector("#timeField").value
+              }`,
+              amount: lm_form.querySelector("#amount").value,
+              currency: lm_form.querySelector("#currency").value,
+              payee: lm_form.querySelector("#payee").value,
+              notes: lm_form.querySelector("#notes").value,
+            },
+          ],
+          skip_duplicates: true,
+        };
+        postData(
+          "https://dev.lunchmoney.app/v1/transactions",
+          transaction_group
+        );
+        console.log(transaction_group);
+      });
+      if (!localStorage.token) {
+        // if there is no token, then listen for the submission to set the token.
+        token_form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          localStorage.setItem(
+            "token",
+            token_form.querySelector("#token").value
+          );
+          console.log(e);
+        });
+      }
+    </script>
+  </body>
+</html>
