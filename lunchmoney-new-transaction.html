@@ -120,6 +120,51 @@
               <option value="usd">U.S. Dollar</option>
             </select>
           </div>
+          <div>
+            <label
+              for="category"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Category</label
+            >
+            <!-- Quick Category Buttons -->
+            <div class="flex gap-2 mb-2 flex-wrap">
+              <button
+                type="button"
+                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                data-category="Professional Services"
+              >
+                Professional Services
+              </button>
+              <button
+                type="button"
+                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                data-category="Treats"
+              >
+                Treats
+              </button>
+              <button
+                type="button"
+                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                data-category="Groceries"
+              >
+                Groceries
+              </button>
+              <button
+                type="button"
+                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                data-category="Restaurants"
+              >
+                Restaurants
+              </button>
+            </div>
+            <select
+              id="category"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+            >
+              <option value="">Select a category</option>
+            </select>
+          </div>
           <div class="col-span-2">
             <label
               for="message"
@@ -170,12 +215,14 @@
       // Initial Setup
       const lm_form = document.getElementById("transaction_form");
       const token_form = document.getElementById("token_form");
+      const categorySelect = document.getElementById("category");
+      let categories = []; // Store fetched categories globally
 
       lm_form.querySelector("#datepicker").valueAsDate = new Date();
       var now = new Date();
       var offset = now.getTimezoneOffset() * 60000;
       var adjustedDate = new Date(now.getTime() - offset);
-      var formattedDate = adjustedDate.toISOString().substring(11, 16); // For minute precision
+      var formattedDate = adjustedDate.toISOString().substring(11, 16);
       var datetimeField = document.getElementById("timeField");
       datetimeField.value = formattedDate;
 
@@ -188,26 +235,49 @@
         });
         const data = await response.json();
 
-        const filtered_cats = data.categories
+        categories = data.categories
           .map((cat) => {
-            const cat_obj = {};
             if (!cat.is_income) {
               return {
                 id: cat.id,
                 name: cat.name,
-                children: {
-                  id: cat.children?.id,
-                  name: cat.children?.name,
-                },
+                children: cat.children?.length
+                  ? cat.children.map((child) => ({
+                      id: child.id,
+                      name: child.name,
+                    }))
+                  : null,
               };
             }
           })
           .filter(Boolean);
-        console.log("CATS => ", filtered_cats);
-        return filtered_cats;
+
+        // Populate the category dropdown
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat.id;
+          option.textContent = cat.name;
+          categorySelect.appendChild(option);
+
+          if (cat.children) {
+            cat.children.forEach((child) => {
+              const childOption = document.createElement("option");
+              childOption.value = child.id;
+              childOption.textContent = `  - ${child.name}`;
+              categorySelect.appendChild(childOption);
+            });
+          }
+        });
+
+        console.log("CATS => ", categories);
+        return categories;
       };
 
-      getData("https://dev.lunchmoney.app/v1/categories");
+      // Fetch categories on page load if token exists
+      if (localStorage.getItem("token")) {
+        getData("https://dev.lunchmoney.app/v1/categories");
+      }
+
       const postData = async (url = "", data = {}) => {
         const response = await fetch(url, {
           method: "POST",
@@ -219,6 +289,7 @@
         });
         return response.json();
       };
+
       lm_form.addEventListener("submit", function (e) {
         e.preventDefault();
         const transaction_group = {
@@ -231,6 +302,7 @@
               currency: lm_form.querySelector("#currency").value,
               payee: lm_form.querySelector("#payee").value,
               notes: lm_form.querySelector("#notes").value,
+              category_id: parseInt(lm_form.querySelector("#category").value),
             },
           ],
           skip_duplicates: true,
@@ -238,20 +310,40 @@
         postData(
           "https://dev.lunchmoney.app/v1/transactions",
           transaction_group
-        );
+        ).then((response) => {
+          console.log("Transaction submitted:", response);
+        });
         console.log(transaction_group);
       });
+
       if (!localStorage.token) {
-        // if there is no token, then listen for the submission to set the token.
         token_form.addEventListener("submit", function (e) {
           e.preventDefault();
           localStorage.setItem(
             "token",
             token_form.querySelector("#token").value
           );
-          console.log(e);
+          getData("https://dev.lunchmoney.app/v1/categories");
+          console.log("Token set:", localStorage.getItem("token"));
         });
       }
+
+      // Add event listeners to category buttons
+      document.querySelectorAll(".category-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+          const categoryName = this.getAttribute("data-category");
+          const matchedCategory =
+            categories.find((cat) => cat.name === categoryName) ||
+            categories
+              .flatMap((cat) => cat.children || [])
+              .find((child) => child.name === categoryName);
+          if (matchedCategory) {
+            categorySelect.value = matchedCategory.id;
+          } else {
+            console.warn(`Category "${categoryName}" not found in API data`);
+          }
+        });
+      });
     </script>
   </body>
 </html>
