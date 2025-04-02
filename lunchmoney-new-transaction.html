@@ -9,7 +9,7 @@
   <body class="p-5 bg-white dark:bg-gray-900 antialiased">
     <div>
       <form id="transaction_form" action="">
-        <div class="grid gap-6 mb-6 md:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div>
             <label
               for="amount"
@@ -38,7 +38,7 @@
               required
             />
           </div>
-          <div class="flex gap-5">
+          <div class="flex flex-col gap-5 md:flex-row">
             <div>
               <label
                 for="datepicker"
@@ -112,12 +112,20 @@
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Currency</label
             >
+            <div class="flex gap-2 mb-2 flex-wrap" id="currency_buttons">
+              <button
+                type="button"
+                id="set_currencies_btn"
+                class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+              >
+                Set Currencies
+              </button>
+            </div>
             <select
               id="currency"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option value="mxn">Mexican Peso</option>
-              <option value="usd">U.S. Dollar</option>
+              <option value="">Select a currency</option>
             </select>
           </div>
           <div>
@@ -126,35 +134,13 @@
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Category</label
             >
-            <!-- Quick Category Buttons -->
-            <div class="flex gap-2 mb-2 flex-wrap">
+            <div class="flex gap-2 mb-2 flex-wrap" id="category_buttons">
               <button
                 type="button"
-                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-                data-category="Professional Services"
+                id="select_favorites_btn"
+                class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
               >
-                Professional Services
-              </button>
-              <button
-                type="button"
-                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-                data-category="Treats"
-              >
-                Treats
-              </button>
-              <button
-                type="button"
-                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-                data-category="Groceries"
-              >
-                Groceries
-              </button>
-              <button
-                type="button"
-                class="category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-                data-category="Restaurants"
-              >
-                Restaurants
+                Select Favorites
               </button>
             </div>
             <select
@@ -167,7 +153,7 @@
           </div>
           <div class="col-span-2">
             <label
-              for="message"
+              for="notes"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Your message</label
             >
@@ -189,8 +175,8 @@
       </form>
     </div>
 
-    <form id="token_form" action="">
-      <div>
+    <form id="token_form" action="" class="mt-6">
+      <div id="token_input_container">
         <label
           for="token"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -202,21 +188,149 @@
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Token"
         />
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-2"
+        >
+          Submit
+        </button>
       </div>
-
-      <button
-        type="submit"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        Submit
-      </button>
+      <div class="flex flex-col gap-2">
+        <a
+          href="#"
+          id="edit_currencies_link"
+          class="hidden text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline mt-2"
+          >Edit Currencies</a
+        >
+        <a
+          href="#"
+          id="edit_favorites_link"
+          class="hidden text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline mt-2"
+          >Edit Favorites</a
+        >
+        <div class="flex items-center gap-2">
+          <div
+            id="token_stored_notice"
+            class="hidden text-sm text-green-600 dark:text-green-400 mt-2"
+          >
+            API Stored
+          </div>
+          <button
+            type="button"
+            id="clear_token_btn"
+            class="hidden text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline mt-2"
+          >
+            Clear Token
+          </button>
+        </div>
+      </div>
     </form>
+
+    <!-- Favorites Modal -->
+    <div
+      id="favorites_modal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md max-h-[80vh] overflow-y-auto"
+      >
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Select Favorite Categories
+        </h3>
+        <div id="favorites_checkboxes" class="space-y-2"></div>
+        <div class="flex justify-end gap-2 mt-4">
+          <button
+            id="save_favorites_btn"
+            class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-4 py-2"
+          >
+            Save
+          </button>
+          <button
+            id="cancel_favorites_btn"
+            class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg text-sm px-4 py-2"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Currencies Modal -->
+    <div
+      id="currencies_modal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md max-h-[80vh] overflow-y-auto"
+      >
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Set Currencies
+        </h3>
+        <div id="currencies_checkboxes" class="space-y-2"></div>
+        <div class="flex justify-end gap-2 mt-4">
+          <button
+            id="save_currencies_btn"
+            class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-4 py-2"
+          >
+            Save
+          </button>
+          <button
+            id="cancel_currencies_btn"
+            class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg text-sm px-4 py-2"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
-      // Initial Setup
       const lm_form = document.getElementById("transaction_form");
       const token_form = document.getElementById("token_form");
       const categorySelect = document.getElementById("category");
-      let categories = []; // Store fetched categories globally
+      const currencySelect = document.getElementById("currency");
+      const tokenInputContainer = document.getElementById(
+        "token_input_container"
+      );
+      const tokenStoredNotice = document.getElementById("token_stored_notice");
+      const clearTokenBtn = document.getElementById("clear_token_btn");
+      const categoryButtonsContainer =
+        document.getElementById("category_buttons");
+      const selectFavoritesBtn = document.getElementById(
+        "select_favorites_btn"
+      );
+      const favoritesModal = document.getElementById("favorites_modal");
+      const favoritesCheckboxes = document.getElementById(
+        "favorites_checkboxes"
+      );
+      const saveFavoritesBtn = document.getElementById("save_favorites_btn");
+      const cancelFavoritesBtn = document.getElementById(
+        "cancel_favorites_btn"
+      );
+      const editFavoritesLink = document.getElementById("edit_favorites_link");
+      const currencyButtonsContainer =
+        document.getElementById("currency_buttons");
+      const setCurrenciesBtn = document.getElementById("set_currencies_btn");
+      const currenciesModal = document.getElementById("currencies_modal");
+      const currenciesCheckboxes = document.getElementById(
+        "currencies_checkboxes"
+      );
+      const saveCurrenciesBtn = document.getElementById("save_currencies_btn");
+      const cancelCurrenciesBtn = document.getElementById(
+        "cancel_currencies_btn"
+      );
+      const editCurrenciesLink = document.getElementById(
+        "edit_currencies_link"
+      );
+      let categories = [];
+      let currenciesList = [
+        { code: "USD", name: "U.S. Dollar" },
+        { code: "EUR", name: "Euro" },
+        { code: "GBP", name: "British Pound" },
+        { code: "CAD", name: "Canadian Dollar" },
+        { code: "MXN", name: "Mexican Peso" },
+        { code: "JPY", name: "Japanese Yen" },
+      ];
 
       lm_form.querySelector("#datepicker").valueAsDate = new Date();
       var now = new Date();
@@ -227,13 +341,25 @@
       datetimeField.value = formattedDate;
 
       const getData = async (url = "") => {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          return response.json();
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return null;
+        }
+      };
+
+      const populateCategories = async () => {
+        const data = await getData("https://dev.lunchmoney.app/v1/categories");
+        if (!data) return;
 
         categories = data.categories
           .map((cat) => {
@@ -252,7 +378,6 @@
           })
           .filter(Boolean);
 
-        // Populate the category dropdown
         categories.forEach((cat) => {
           const option = document.createElement("option");
           option.value = cat.id;
@@ -269,14 +394,264 @@
           }
         });
 
-        console.log("CATS => ", categories);
-        return categories;
+        favoritesCheckboxes.innerHTML = "";
+        categories.forEach((cat) => {
+          const div = document.createElement("div");
+          div.className = "flex items-center";
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.id = `cat-${cat.id}`;
+          input.value = cat.id;
+          input.className = "mr-2";
+          const label = document.createElement("label");
+          label.htmlFor = `cat-${cat.id}`;
+          label.textContent = cat.name;
+          label.className = "text-gray-900 dark:text-white";
+          div.appendChild(input);
+          div.appendChild(label);
+          favoritesCheckboxes.appendChild(div);
+
+          if (cat.children) {
+            cat.children.forEach((child) => {
+              const childDiv = document.createElement("div");
+              childDiv.className = "flex items-center pl-4";
+              const childInput = document.createElement("input");
+              childInput.type = "checkbox";
+              childInput.id = `cat-${child.id}`;
+              childInput.value = child.id;
+              childInput.className = "mr-2";
+              const childLabel = document.createElement("label");
+              childLabel.htmlFor = `cat-${child.id}`;
+              childLabel.textContent = child.name;
+              childLabel.className = "text-gray-900 dark:text-white";
+              childDiv.appendChild(childInput);
+              childDiv.appendChild(childLabel);
+              favoritesCheckboxes.appendChild(childDiv);
+            });
+          }
+        });
       };
 
-      // Fetch categories on page load if token exists
-      if (localStorage.getItem("token")) {
-        getData("https://dev.lunchmoney.app/v1/categories");
+      const populateCurrencies = () => {
+        const selectedCurrencies =
+          JSON.parse(localStorage.getItem("selected_currencies")) || [];
+        const favoriteCurrency = localStorage.getItem("favorite_currency");
+
+        currenciesCheckboxes.innerHTML = "";
+        currenciesList.forEach((currency) => {
+          const div = document.createElement("div");
+          div.className = "flex items-center justify-between";
+          const checkboxDiv = document.createElement("div");
+          checkboxDiv.className = "flex items-center";
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.id = `curr-${currency.code}`;
+          input.value = currency.code;
+          input.className = "mr-2";
+          const label = document.createElement("label");
+          label.htmlFor = `curr-${currency.code}`;
+          label.textContent = `${currency.name} (${currency.code})`;
+          label.className = "text-gray-900 dark:text-white";
+          checkboxDiv.appendChild(input);
+          checkboxDiv.appendChild(label);
+
+          const favoriteBtn = document.createElement("button");
+          favoriteBtn.type = "button";
+          favoriteBtn.className =
+            "text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline";
+          favoriteBtn.textContent =
+            currency.code === favoriteCurrency
+              ? "Favorite ✓"
+              : "Set as Favorite";
+          favoriteBtn.addEventListener("click", () =>
+            setFavoriteCurrency(currency.code)
+          );
+
+          div.appendChild(checkboxDiv);
+          div.appendChild(favoriteBtn);
+          currenciesCheckboxes.appendChild(div);
+        });
+
+        currencySelect.innerHTML =
+          '<option value="">Select a currency</option>';
+        if (favoriteCurrency) {
+          const fav = currenciesList.find((c) => c.code === favoriteCurrency);
+          if (fav) {
+            const option = document.createElement("option");
+            option.value = fav.code.toLowerCase();
+            option.textContent = `${fav.name} (${fav.code})`;
+            option.selected = true;
+            currencySelect.insertBefore(
+              option,
+              currencySelect.firstChild.nextSibling
+            );
+          }
+        }
+        selectedCurrencies.forEach((code) => {
+          const currency = currenciesList.find((c) => c.code === code);
+          if (currency && code !== favoriteCurrency) {
+            const option = document.createElement("option");
+            option.value = currency.code.toLowerCase();
+            option.textContent = `${currency.name} (${currency.code})`;
+            currencySelect.appendChild(option);
+          }
+        });
+      };
+
+      const populateFavoriteButtons = () => {
+        const favorites =
+          JSON.parse(localStorage.getItem("favorite_categories")) || [];
+        categoryButtonsContainer.innerHTML = "";
+
+        if (favorites.length === 0) {
+          const selectBtn = document.createElement("button");
+          selectBtn.type = "button";
+          selectBtn.id = "select_favorites_btn";
+          selectBtn.className =
+            "text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800";
+          selectBtn.textContent = "Select Favorites";
+          selectBtn.addEventListener("click", openFavoritesModal);
+          categoryButtonsContainer.appendChild(selectBtn);
+        }
+
+        favorites.forEach((catId) => {
+          const cat =
+            categories.find((c) => c.id === catId) ||
+            categories
+              .flatMap((c) => c.children || [])
+              .find((c) => c.id === catId);
+          if (cat) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className =
+              "category-btn text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800";
+            button.setAttribute("data-category", cat.name);
+            button.textContent = cat.name;
+            button.addEventListener("click", () => {
+              categorySelect.value = cat.id;
+            });
+            categoryButtonsContainer.appendChild(button);
+          }
+        });
+      };
+
+      const populateCurrencyButtons = () => {
+        const selectedCurrencies =
+          JSON.parse(localStorage.getItem("selected_currencies")) || [];
+        currencyButtonsContainer.innerHTML = "";
+
+        if (selectedCurrencies.length === 0) {
+          const setBtn = document.createElement("button");
+          setBtn.type = "button";
+          setBtn.id = "set_currencies_btn";
+          setBtn.className =
+            "text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800";
+          setBtn.textContent = "Set Currencies";
+          setBtn.addEventListener("click", openCurrenciesModal);
+          currencyButtonsContainer.appendChild(setBtn);
+        }
+      };
+
+      const openFavoritesModal = () => {
+        const favorites =
+          JSON.parse(localStorage.getItem("favorite_categories")) || [];
+        Array.from(
+          favoritesCheckboxes.querySelectorAll("input[type=checkbox]")
+        ).forEach((checkbox) => {
+          checkbox.checked = favorites.includes(parseInt(checkbox.value));
+        });
+        favoritesModal.classList.remove("hidden");
+      };
+
+      const saveFavorites = () => {
+        const selected = Array.from(
+          favoritesCheckboxes.querySelectorAll("input[type=checkbox]:checked")
+        ).map((checkbox) => parseInt(checkbox.value));
+        localStorage.setItem("favorite_categories", JSON.stringify(selected));
+        populateFavoriteButtons();
+        favoritesModal.classList.add("hidden");
+        editFavoritesLink.classList.toggle("hidden", selected.length === 0);
+      };
+
+      const openCurrenciesModal = () => {
+        const selectedCurrencies =
+          JSON.parse(localStorage.getItem("selected_currencies")) || [];
+        Array.from(
+          currenciesCheckboxes.querySelectorAll("input[type=checkbox]")
+        ).forEach((checkbox) => {
+          checkbox.checked = selectedCurrencies.includes(checkbox.value);
+        });
+        currenciesModal.classList.remove("hidden");
+      };
+
+      const saveCurrencies = () => {
+        const selected = Array.from(
+          currenciesCheckboxes.querySelectorAll("input[type=checkbox]:checked")
+        ).map((checkbox) => checkbox.value);
+        localStorage.setItem("selected_currencies", JSON.stringify(selected));
+        populateCurrencies();
+        populateCurrencyButtons();
+        currenciesModal.classList.add("hidden");
+        editCurrenciesLink.classList.toggle("hidden", selected.length === 0);
+      };
+
+      const setFavoriteCurrency = (code) => {
+        localStorage.setItem("favorite_currency", code);
+        populateCurrencies();
+      };
+
+      function updateTokenUI() {
+        const hasToken = localStorage.getItem("token");
+        const favorites =
+          JSON.parse(localStorage.getItem("favorite_categories")) || [];
+        const selectedCurrencies =
+          JSON.parse(localStorage.getItem("selected_currencies")) || [];
+
+        if (hasToken) {
+          tokenInputContainer.classList.add("hidden");
+          tokenStoredNotice.classList.remove("hidden");
+          clearTokenBtn.classList.remove("hidden");
+          editFavoritesLink.classList.toggle("hidden", favorites.length === 0);
+          editCurrenciesLink.classList.toggle(
+            "hidden",
+            selectedCurrencies.length === 0
+          );
+          populateCategories()
+            .then(() => {
+              populateFavoriteButtons();
+              populateCurrencies();
+              populateCurrencyButtons();
+            })
+            .catch((error) => {
+              console.error("Error loading categories:", error);
+              categorySelect.innerHTML =
+                '<option value="">Error loading categories</option>';
+              currencySelect.innerHTML =
+                '<option value="">Error loading currencies</option>';
+            });
+        } else {
+          tokenInputContainer.classList.remove("hidden");
+          tokenStoredNotice.classList.add("hidden");
+          clearTokenBtn.classList.add("hidden");
+          editFavoritesLink.classList.add("hidden");
+          editCurrenciesLink.classList.add("hidden");
+          currencySelect.innerHTML =
+            '<option value="">No token, currencies unavailable</option>';
+          categorySelect.innerHTML =
+            '<option value="">No token, categories unavailable</option>';
+          categoryButtonsContainer.innerHTML =
+            '<button type="button" id="select_favorites_btn" class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800">Select Favorites</button>';
+          currencyButtonsContainer.innerHTML =
+            '<button type="button" id="set_currencies_btn" class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800">Set Currencies</button>';
+          document
+            .getElementById("select_favorites_btn")
+            .addEventListener("click", openFavoritesModal);
+          document
+            .getElementById("set_currencies_btn")
+            .addEventListener("click", openCurrenciesModal);
+        }
       }
+      updateTokenUI();
 
       const postData = async (url = "", data = {}) => {
         const response = await fetch(url, {
@@ -313,36 +688,40 @@
         ).then((response) => {
           console.log("Transaction submitted:", response);
         });
-        console.log(transaction_group);
       });
 
-      if (!localStorage.token) {
-        token_form.addEventListener("submit", function (e) {
-          e.preventDefault();
-          localStorage.setItem(
-            "token",
-            token_form.querySelector("#token").value
-          );
-          getData("https://dev.lunchmoney.app/v1/categories");
-          console.log("Token set:", localStorage.getItem("token"));
-        });
-      }
+      token_form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        localStorage.setItem("token", token_form.querySelector("#token").value);
+        updateTokenUI();
+      });
 
-      // Add event listeners to category buttons
-      document.querySelectorAll(".category-btn").forEach((button) => {
-        button.addEventListener("click", function () {
-          const categoryName = this.getAttribute("data-category");
-          const matchedCategory =
-            categories.find((cat) => cat.name === categoryName) ||
-            categories
-              .flatMap((cat) => cat.children || [])
-              .find((child) => child.name === categoryName);
-          if (matchedCategory) {
-            categorySelect.value = matchedCategory.id;
-          } else {
-            console.warn(`Category "${categoryName}" not found in API data`);
-          }
-        });
+      clearTokenBtn.addEventListener("click", function () {
+        localStorage.removeItem("token");
+        localStorage.removeItem("favorite_categories");
+        localStorage.removeItem("selected_currencies");
+        localStorage.removeItem("favorite_currency");
+        updateTokenUI();
+      });
+
+      selectFavoritesBtn.addEventListener("click", openFavoritesModal);
+      saveFavoritesBtn.addEventListener("click", saveFavorites);
+      cancelFavoritesBtn.addEventListener("click", () =>
+        favoritesModal.classList.add("hidden")
+      );
+      editFavoritesLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        openFavoritesModal();
+      });
+
+      setCurrenciesBtn.addEventListener("click", openCurrenciesModal);
+      saveCurrenciesBtn.addEventListener("click", saveCurrencies);
+      cancelCurrenciesBtn.addEventListener("click", () =>
+        currenciesModal.classList.add("hidden")
+      );
+      editCurrenciesLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        openCurrenciesModal();
       });
     </script>
   </body>
