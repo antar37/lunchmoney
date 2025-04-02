@@ -9,7 +9,7 @@
   <body class="p-5 bg-white dark:bg-gray-900 antialiased">
     <div>
       <form id="transaction_form" action="">
-        <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+        <div class="md:grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div>
             <label
               for="amount"
@@ -113,13 +113,7 @@
               >Currency</label
             >
             <div class="flex gap-2 mb-2 flex-wrap" id="currency_buttons">
-              <button
-                type="button"
-                id="set_currencies_btn"
-                class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-              >
-                Set Currencies
-              </button>
+              <!-- "Set Currencies" button will be added dynamically -->
             </div>
             <select
               id="currency"
@@ -310,7 +304,6 @@
       const editFavoritesLink = document.getElementById("edit_favorites_link");
       const currencyButtonsContainer =
         document.getElementById("currency_buttons");
-      const setCurrenciesBtn = document.getElementById("set_currencies_btn");
       const currenciesModal = document.getElementById("currencies_modal");
       const currenciesCheckboxes = document.getElementById(
         "currencies_checkboxes"
@@ -550,6 +543,7 @@
           setBtn.addEventListener("click", openCurrenciesModal);
           currencyButtonsContainer.appendChild(setBtn);
         }
+        // No button added if currencies are set; "Edit Currencies" link takes over
       };
 
       const openFavoritesModal = () => {
@@ -714,7 +708,6 @@
         openFavoritesModal();
       });
 
-      setCurrenciesBtn.addEventListener("click", openCurrenciesModal);
       saveCurrenciesBtn.addEventListener("click", saveCurrencies);
       cancelCurrenciesBtn.addEventListener("click", () =>
         currenciesModal.classList.add("hidden")
