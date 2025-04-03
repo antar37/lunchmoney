@@ -162,7 +162,9 @@
 
         <button
           type="submit"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          id="submit_btn"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled
         >
           Submit
         </button>
@@ -278,6 +280,32 @@
       </div>
     </div>
 
+    <!-- Submission Confirmation Modal -->
+    <div
+      id="submission_modal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md max-h-[80vh] overflow-y-auto"
+      >
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Transaction Submitted
+        </h3>
+        <div
+          id="submission_details"
+          class="space-y-2 text-gray-900 dark:text-white"
+        ></div>
+        <div class="flex justify-end mt-4">
+          <button
+            id="close_submission_btn"
+            class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-4 py-2"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const lm_form = document.getElementById("transaction_form");
       const token_form = document.getElementById("token_form");
@@ -315,6 +343,14 @@
       const editCurrenciesLink = document.getElementById(
         "edit_currencies_link"
       );
+      const submitBtn = document.getElementById("submit_btn");
+      const submissionModal = document.getElementById("submission_modal");
+      const submissionDetails = document.getElementById("submission_details");
+      const closeSubmissionBtn = document.getElementById(
+        "close_submission_btn"
+      );
+      const amountInput = document.getElementById("amount");
+      const payeeInput = document.getElementById("payee");
       let categories = [];
       let currenciesList = [
         { code: "USD", name: "U.S. Dollar" },
@@ -543,7 +579,6 @@
           setBtn.addEventListener("click", openCurrenciesModal);
           currencyButtonsContainer.appendChild(setBtn);
         }
-        // No button added if currencies are set; "Edit Currencies" link takes over
       };
 
       const openFavoritesModal = () => {
@@ -648,18 +683,42 @@
       updateTokenUI();
 
       const postData = async (url = "", data = {}) => {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(data),
-        });
-        return response.json();
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify(data),
+          });
+          if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          return response.json();
+        } catch (error) {
+          console.error("Error posting data:", error);
+          return null;
+        }
       };
 
-      lm_form.addEventListener("submit", function (e) {
+      const updateSubmitButtonState = () => {
+        const amountFilled = amountInput.value.trim() !== "";
+        const payeeFilled = payeeInput.value.trim() !== "";
+        submitBtn.disabled = !(amountFilled && payeeFilled);
+      };
+
+      const clearFormInputs = () => {
+        amountInput.value = "";
+        payeeInput.value = "";
+        lm_form.querySelector("#datepicker").valueAsDate = new Date();
+        datetimeField.value = formattedDate;
+        currencySelect.value = "";
+        categorySelect.value = "";
+        lm_form.querySelector("#notes").value = "";
+        updateSubmitButtonState();
+      };
+
+      lm_form.addEventListener("submit", async function (e) {
         e.preventDefault();
         const transaction_group = {
           transactions: [
@@ -667,21 +726,56 @@
               date: `${lm_form.querySelector("#datepicker").value}T${
                 lm_form.querySelector("#timeField").value
               }`,
-              amount: lm_form.querySelector("#amount").value,
-              currency: lm_form.querySelector("#currency").value,
-              payee: lm_form.querySelector("#payee").value,
+              amount: amountInput.value,
+              currency: currencySelect.value,
+              payee: payeeInput.value,
               notes: lm_form.querySelector("#notes").value,
-              category_id: parseInt(lm_form.querySelector("#category").value),
+              category_id: parseInt(categorySelect.value) || null,
             },
           ],
           skip_duplicates: true,
         };
-        postData(
+
+        const response = await postData(
           "https://dev.lunchmoney.app/v1/transactions",
           transaction_group
-        ).then((response) => {
+        );
+        if (response) {
           console.log("Transaction submitted:", response);
-        });
+          submissionDetails.innerHTML = `
+            <p><strong>Amount:</strong> ${
+              transaction_group.transactions[0].amount
+            }</p>
+            <p><strong>Merchant:</strong> ${
+              transaction_group.transactions[0].payee
+            }</p>
+            <p><strong>Date:</strong> ${
+              lm_form.querySelector("#datepicker").value
+            }</p>
+            <p><strong>Time:</strong> ${
+              lm_form.querySelector("#timeField").value
+            }</p>
+            <p><strong>Currency:</strong> ${
+              transaction_group.transactions[0].currency || "Not specified"
+            }</p>
+            <p><strong>Category:</strong> ${
+              categorySelect.options[categorySelect.selectedIndex]?.text ||
+              "Not specified"
+            }</p>
+            <p><strong>Notes:</strong> ${
+              transaction_group.transactions[0].notes || "None"
+            }</p>
+          `;
+          submissionModal.classList.remove("hidden");
+        }
+      });
+
+      amountInput.addEventListener("input", updateSubmitButtonState);
+      payeeInput.addEventListener("input", updateSubmitButtonState);
+
+      closeSubmissionBtn.addEventListener("click", () => {
+        submissionModal.classList.add("hidden");
+        clearFormInputs();
       });
 
       token_form.addEventListener("submit", function (e) {
